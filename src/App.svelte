@@ -14,7 +14,7 @@
 
   const fetchImages = async (type, category) => {
     try {
-      if (apiResponse[category].length) {
+      if (apiResponse[category]?.length) {
         photos = apiResponse[category];
         return photos;
       }
@@ -24,7 +24,7 @@
       apiResponse[category] = [...photos];
       visible = true;
     } catch (e) {
-      message = "Error loading data";
+      message = e?.message;
     }
   }
 
