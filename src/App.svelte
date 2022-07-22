@@ -2,21 +2,30 @@
   import { onMount } from 'svelte';
   import getImages from './services/images.ts';
   import FilterSearch from './lib/FilterSearch.svelte';
+  import Notification from './lib/Notification.svelte';
 
   let apiResponse = {
     'yeet': [],
     'happy': []
   }
   let photos = [];
+  let visible: boolean = true;
+  let message: string = "";
 
   const fetchImages = async (type, category) => {
-    if(apiResponse[category].length) {
-      photos = apiResponse[category];
-      return photos;
-    }
+    try {
+      if (apiResponse[category].length) {
+        photos = apiResponse[category];
+        return photos;
+      }
 
-    photos = await getImages(type, category);
-    apiResponse[category] = [...photos];
+      visible = false;
+      photos = await getImages(type, category);
+      apiResponse[category] = [...photos];
+      visible = true;
+    } catch (e) {
+      message = "Error loading data";
+    }
   }
 
   onMount(() => fetchImages('sfw', 'yeet'));
@@ -24,7 +33,8 @@
 
 <main>
   <h1>Anime Photos</h1>
-  <FilterSearch fetchImages={fetchImages}/>
+  <Notification message={message} />
+  <FilterSearch fetchImages={fetchImages} visible={visible} />
   {#each photos as photo(photo)}
     <div>
       <img src={photo} width="100%" height="50%" alt="anime-image">

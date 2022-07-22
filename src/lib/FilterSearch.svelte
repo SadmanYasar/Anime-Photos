@@ -1,6 +1,6 @@
 <script lang="ts">
   let type, category;
-  export let fetchImages;
+  export let fetchImages, visible;
 
   const handleSubmit = () => {
     fetchImages(type, category);
@@ -23,8 +23,8 @@
   {/if}
   </div>
   <button
-    style="display: {type === 'nsfw' ? 'none' : ''}"
-    disabled={type === 'nsfw'}  
+    style="display: {(type === 'nsfw' || visible === false) ? 'none' : ''}"
+    disabled={type === 'nsfw' || visible === false}  
     type=submit >
     Search
   </button>
